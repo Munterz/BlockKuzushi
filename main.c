@@ -9,7 +9,7 @@ int main() {
         DrawText("Raylib test", 300, 280, 20, DARKGRAY);
         EndDrawing();
     }
-
+//test
     CloseWindow();
     return 0;
 }
