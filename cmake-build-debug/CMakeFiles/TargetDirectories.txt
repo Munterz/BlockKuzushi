@@ -1,0 +1,3 @@
+C:/Users/Wowke/CLionProjects/BlockKuzushi/cmake-build-debug/CMakeFiles/BlockKuzushi.dir
+C:/Users/Wowke/CLionProjects/BlockKuzushi/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Wowke/CLionProjects/BlockKuzushi/cmake-build-debug/CMakeFiles/rebuild_cache.dir
