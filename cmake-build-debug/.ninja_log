@@ -1,5 +1,12 @@
 # ninja log v6
-2	86	7598079356515013	CMakeFiles/BlockKuzushi.dir/main.c.obj	5f236ed79bcab99d
-87	430	7598079357365148	BlockKuzushi.exe	238b71372debeb52
 3	90	7598079507483986	CMakeFiles/BlockKuzushi.dir/main.c.obj	5f236ed79bcab99d
 91	244	7598079508361957	BlockKuzushi.exe	238b71372debeb52
+4	498	7599710252159017	build.ninja	d3b9af58a354b5ec
+3	189	7599710252471687	CMakeFiles/BlockKuzushi.dir/main.c.obj	5f236ed79bcab99d
+190	554	7599710254338111	BlockKuzushi.exe	238b71372debeb52
+3	67	7599712597629012	CMakeFiles/BlockKuzushi.dir/main.c.obj	5f236ed79bcab99d
+68	185	7599712598272297	BlockKuzushi.exe	238b71372debeb52
+3	62	7599713016141362	CMakeFiles/BlockKuzushi.dir/main.c.obj	5f236ed79bcab99d
+62	180	7599713016730511	BlockKuzushi.exe	238b71372debeb52
+3	58	7599713316642466	CMakeFiles/BlockKuzushi.dir/main.c.obj	5f236ed79bcab99d
+64	184	7599713317250782	BlockKuzushi.exe	238b71372debeb52
