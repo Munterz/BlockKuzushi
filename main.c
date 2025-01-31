@@ -9,6 +9,7 @@ typedef struct {
     Rectangle rect;
     bool active;
     Color color;
+    bool isPowerUp;
 } Block;
 
 int main() {
@@ -27,6 +28,7 @@ int main() {
 
     int lives = 3;
     bool gameOver = false;
+    bool gameWon = false;
 
     Color rowColors[ROWS] = { RED, ORANGE, YELLOW, GREEN, BLUE };
 
@@ -37,11 +39,23 @@ int main() {
             blocks[i * COLUMNS + j].rect = (Rectangle){ j * (BLOCK_WIDTH + 5) + 25, i * (BLOCK_HEIGHT + 5) + 50, BLOCK_WIDTH, BLOCK_HEIGHT };
             blocks[i * COLUMNS + j].active = true;
             blocks[i * COLUMNS + j].color = rowColors[i];
+            blocks[i * COLUMNS + j].isPowerUp = false;
         }
     }
 
+    int powerUp1 = GetRandomValue(0, ROWS * COLUMNS - 1);
+    int powerUp2;
+    do {
+        powerUp2 = GetRandomValue(0, ROWS * COLUMNS - 1);
+    } while (powerUp2 == powerUp1);
+
+    blocks[powerUp1].isPowerUp = true;
+    blocks[powerUp1].color = PURPLE;
+    blocks[powerUp2].isPowerUp = true;
+    blocks[powerUp2].color = PURPLE;
+
     while (!WindowShouldClose()) {
-        if (!gameOver) {
+        if (!gameOver && !gameWon) {
             if (IsKeyDown(KEY_LEFT) && paddle.x > 0) {
                 paddle.x -= paddleSpeed;
             }
@@ -69,8 +83,23 @@ int main() {
                 if (blocks[i].active && CheckCollisionCircleRec(ballPosition, ballRadius, blocks[i].rect)) {
                     blocks[i].active = false;
                     ballSpeed.y *= -1;
+
+                    if (blocks[i].isPowerUp) {
+                        lives++;
+                    }
                     break;
                 }
+            }
+
+            int blocksRemaining = 0;
+            for (int i = 0; i < ROWS * COLUMNS; i++) {
+                if (blocks[i].active) {
+                    blocksRemaining++;
+                }
+            }
+
+            if (blocksRemaining == 0) {
+                gameWon = true;
             }
 
             if (ballPosition.y > screenHeight) {
@@ -86,13 +115,27 @@ int main() {
             if (IsKeyPressed(KEY_ENTER)) {
                 lives = 3;
                 gameOver = false;
+                gameWon = false;
                 ballPosition = (Vector2){ screenWidth / 2, screenHeight / 2 };
                 ballSpeed = (Vector2){ 4, -4 };
                 paddle.x = screenWidth / 2 - paddle.width / 2;
 
                 for (int i = 0; i < ROWS * COLUMNS; i++) {
                     blocks[i].active = true;
+                    blocks[i].isPowerUp = false;
+                    blocks[i].color = rowColors[i / COLUMNS];
                 }
+
+                int powerUp1 = GetRandomValue(0, ROWS * COLUMNS - 1);
+                int powerUp2;
+                do {
+                    powerUp2 = GetRandomValue(0, ROWS * COLUMNS - 1);
+                } while (powerUp2 == powerUp1);
+
+                blocks[powerUp1].isPowerUp = true;
+                blocks[powerUp1].color = PURPLE;
+                blocks[powerUp2].isPowerUp = true;
+                blocks[powerUp2].color = PURPLE;
             }
         }
 
@@ -101,6 +144,9 @@ int main() {
 
         if (gameOver) {
             DrawText("GAME OVER", screenWidth / 2 - 100, screenHeight / 2 - 20, 40, WHITE);
+            DrawText("Press ENTER to restart", screenWidth / 2 - 140, screenHeight / 2 + 30, 20, WHITE);
+        } else if (gameWon) {
+            DrawText("YOU WIN!", screenWidth / 2 - 80, screenHeight / 2 - 20, 40, WHITE);
             DrawText("Press ENTER to restart", screenWidth / 2 - 140, screenHeight / 2 + 30, 20, WHITE);
         } else {
             DrawRectangleRec(paddle, WHITE);
