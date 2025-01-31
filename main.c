@@ -27,6 +27,7 @@ int main() {
     float ballRadius = 8;
 
     int lives = 3;
+    int score = 0;
     bool gameOver = false;
     bool gameWon = false;
 
@@ -79,10 +80,18 @@ int main() {
                 ballPosition.y = paddle.y - ballRadius;
             }
 
+            int blocksRemaining = 0;
+            for (int i = 0; i < ROWS * COLUMNS; i++) {
+                if (blocks[i].active) {
+                    blocksRemaining++;
+                }
+            }
+
             for (int i = 0; i < ROWS * COLUMNS; i++) {
                 if (blocks[i].active && CheckCollisionCircleRec(ballPosition, ballRadius, blocks[i].rect)) {
                     blocks[i].active = false;
                     ballSpeed.y *= -1;
+                    score += 10;
 
                     if (blocks[i].isPowerUp) {
                         lives++;
@@ -91,15 +100,18 @@ int main() {
                 }
             }
 
-            int blocksRemaining = 0;
-            for (int i = 0; i < ROWS * COLUMNS; i++) {
-                if (blocks[i].active) {
-                    blocksRemaining++;
-                }
-            }
-
             if (blocksRemaining == 0) {
                 gameWon = true;
+            }
+
+            if (blocksRemaining < (ROWS * COLUMNS) / 2) {
+                ballSpeed.x = (ballSpeed.x > 0) ? 5 : -5;
+                ballSpeed.y = (ballSpeed.y > 0) ? 5 : -5;
+            }
+
+            if (blocksRemaining < (ROWS * COLUMNS) / 4) {
+                ballSpeed.x = (ballSpeed.x > 0) ? 6 : -6;
+                ballSpeed.y = (ballSpeed.y > 0) ? 6 : -6;
             }
 
             if (ballPosition.y > screenHeight) {
@@ -114,6 +126,7 @@ int main() {
         } else {
             if (IsKeyPressed(KEY_ENTER)) {
                 lives = 3;
+                score = 0;
                 gameOver = false;
                 gameWon = false;
                 ballPosition = (Vector2){ screenWidth / 2, screenHeight / 2 };
@@ -152,6 +165,7 @@ int main() {
             DrawRectangleRec(paddle, WHITE);
             DrawCircleV(ballPosition, ballRadius, WHITE);
             DrawText(TextFormat("Lives: %d", lives), 10, 10, 20, WHITE);
+            DrawText(TextFormat("Score: %d", score), screenWidth - 120, 10, 20, WHITE);
 
             for (int i = 0; i < ROWS * COLUMNS; i++) {
                 if (blocks[i].active) {
