@@ -51,13 +51,22 @@ int main() {
                     ballSpeed = (Vector2){ 4, -4 };
                 }
             }
+        } else {
+            if (IsKeyPressed(KEY_ENTER)) {
+                lives = 3;
+                gameOver = false;
+                ballPosition = (Vector2){ screenWidth / 2, screenHeight / 2 };
+                ballSpeed = (Vector2){ 4, -4 };
+                paddle.x = screenWidth / 2 - paddle.width / 2;
+            }
         }
 
         BeginDrawing();
         ClearBackground(BLACK);
 
         if (gameOver) {
-            DrawText("GAME OVER", screenWidth / 2 - 100, screenHeight / 2, 40, WHITE);
+            DrawText("GAME OVER", screenWidth / 2 - 100, screenHeight / 2 - 20, 40, WHITE);
+            DrawText("Press ENTER to restart", screenWidth / 2 - 140, screenHeight / 2 + 30, 20, WHITE);
         } else {
             DrawRectangleRec(paddle, WHITE);
             DrawCircleV(ballPosition, ballRadius, WHITE);
