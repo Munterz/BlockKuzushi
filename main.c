@@ -1,5 +1,16 @@
 #include "raylib.h"
 
+#define ROWS 5
+#define COLUMNS 10
+#define BLOCK_WIDTH 75
+#define BLOCK_HEIGHT 20
+
+typedef struct {
+    Rectangle rect;
+    bool active;
+    Color color;
+} Block;
+
 int main() {
     const int screenWidth = 800;
     const int screenHeight = 600;
@@ -16,6 +27,18 @@ int main() {
 
     int lives = 3;
     bool gameOver = false;
+
+    Color rowColors[ROWS] = { RED, ORANGE, YELLOW, GREEN, BLUE };
+
+    Block blocks[ROWS * COLUMNS];
+
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLUMNS; j++) {
+            blocks[i * COLUMNS + j].rect = (Rectangle){ j * (BLOCK_WIDTH + 5) + 25, i * (BLOCK_HEIGHT + 5) + 50, BLOCK_WIDTH, BLOCK_HEIGHT };
+            blocks[i * COLUMNS + j].active = true;
+            blocks[i * COLUMNS + j].color = rowColors[i];
+        }
+    }
 
     while (!WindowShouldClose()) {
         if (!gameOver) {
@@ -42,6 +65,14 @@ int main() {
                 ballPosition.y = paddle.y - ballRadius;
             }
 
+            for (int i = 0; i < ROWS * COLUMNS; i++) {
+                if (blocks[i].active && CheckCollisionCircleRec(ballPosition, ballRadius, blocks[i].rect)) {
+                    blocks[i].active = false;
+                    ballSpeed.y *= -1;
+                    break;
+                }
+            }
+
             if (ballPosition.y > screenHeight) {
                 lives--;
                 if (lives <= 0) {
@@ -58,6 +89,10 @@ int main() {
                 ballPosition = (Vector2){ screenWidth / 2, screenHeight / 2 };
                 ballSpeed = (Vector2){ 4, -4 };
                 paddle.x = screenWidth / 2 - paddle.width / 2;
+
+                for (int i = 0; i < ROWS * COLUMNS; i++) {
+                    blocks[i].active = true;
+                }
             }
         }
 
@@ -71,6 +106,12 @@ int main() {
             DrawRectangleRec(paddle, WHITE);
             DrawCircleV(ballPosition, ballRadius, WHITE);
             DrawText(TextFormat("Lives: %d", lives), 10, 10, 20, WHITE);
+
+            for (int i = 0; i < ROWS * COLUMNS; i++) {
+                if (blocks[i].active) {
+                    DrawRectangleRec(blocks[i].rect, blocks[i].color);
+                }
+            }
         }
 
         EndDrawing();
